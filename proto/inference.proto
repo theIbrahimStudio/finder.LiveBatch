@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package inference;
+
+option go_package = "./proto;proto";
+
+service Inference {
+  rpc PredictBatch (BatchInferRequest) returns (BatchInferResponse);
+}
+
+message InferRequest {
+  string input = 1;
+}
+
+message InferResponse {
+  string result = 1;
+}
+
+message BatchInferRequest {
+  repeated InferRequest requests = 1;
+}
+
+message BatchInferResponse {
+  repeated InferResponse responses = 1;
+}
