@@ -29,43 +29,36 @@ LiveBatch acts as a sidecar or proxy in front of your model service.
 
 ## Quick Start
 
-### Run it locally
+Via command-line flags:
 
 ```bash
-go run main.go
+go run main.go --max-batch-size=4 --max-latency-ms=100 --listen-addr=":9000"
 ```
 
-### Test it
+Via environment variables:
 
 ```bash
-curl -X POST -H "Content-Type: application/json" \\
-     -d '{"input": "hello"}' http://localhost:8080/infer
-```
-
-You’ll get:
-
-```json
-{ "result": "ok" }
+LIVEBATCH_MAX_BATCH_SIZE=16 LIVEBATCH_MAX_LATENCY_MS=200 go run main.go
 ```
 
 ---
 
 ## Configuration
 
-| Env / Config   | Default | Description                  |
-| -------------- | ------- | ---------------------------- |
-| `MaxBatchSize` | `8`     | Max number of requests/batch |
-| `MaxLatencyMs` | `50`    | Max delay before flushing    |
-| `ListenAddr`   | `:8080` | Address to bind to           |
+LiveBatch supports configuration via **environment variables** or **command-line flags**, using `viper` + `pflag`.
 
-Config is hardcoded for now — env/config support coming soon.
+| Name              | Flag               | Env Var                    | Default | Description                      |
+| ----------------- | ------------------ | -------------------------- | ------- | -------------------------------- |
+| Max Batch Size    | `--max-batch-size` | `LIVEBATCH_MAX_BATCH_SIZE` | `8`     | Max number of requests per batch |
+| Max Latency (ms)  | `--max-latency-ms` | `LIVEBATCH_MAX_LATENCY_MS` | `50`    | Max wait time before dispatching |
+| Listening Address | `--listen-addr`    | `LIVEBATCH_LISTEN_ADDR`    | `:8080` | HTTP server bind address         |
 
 ---
 
 ## Roadmap
 
 - [x] HTTP dynamic batching proxy (MVP)
-- [ ] Config via environment or CLI
+- [x] Config via environment or CLI
 - [ ] gRPC and ONNX backend support
 - [ ] Prometheus metrics
 - [ ] Deadline-based and priority queueing

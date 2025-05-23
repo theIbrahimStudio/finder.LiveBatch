@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -18,11 +19,13 @@ func LoadConfig() config.Config {
 }
 
 func main() {
-	config := LoadConfig()
+	config := config.Load()
+	fmt.Println(config)
+
 	b := batcher.NewBatcher(config, backend.NewDummyBackend())
 	go b.Run()
 
 	http.HandleFunc("/infer", b.HandleRequest)
-	log.Printf("LiveBatch listening on %s", config.ListenAddr)
+	log.Printf("LiveBatch listening on %s\n", config.ListenAddr)
 	log.Fatal(http.ListenAndServe(config.ListenAddr, nil))
 }
