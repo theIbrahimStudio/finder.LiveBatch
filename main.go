@@ -22,7 +22,7 @@ func main() {
 		b = batcher.NewBatcher(config, &backend.DummyBackend{})
 	}
 
-	b.Run()
+	go b.Run()
 	http.HandleFunc("/infer", b.HandleRequest)
 	log.Printf("LiveBatch listening on %s\n", config.ListenAddr)
 	log.Fatal(http.ListenAndServe(config.ListenAddr, nil))
